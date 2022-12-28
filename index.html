@@ -68,11 +68,11 @@
             Highcharts.getJSON('Testing_Col_Chart_4.json', function (data) {
 
                 // split the data set into ohlc and volume
-                TO_diff = [],
-                    TO_diff_2 = [],
-                    ITM_CE_ltp = [],
-                    ITM_CE_ltp_helper = [],
-                    ITM_CE_ltp_Final = []
+                chng_ltq = [],
+                    chng_ltq_2 = [],
+                    Spot = [],
+                    Spot_helper = [],
+                    Spot_Final = []
                 dataLength = data.length,
                     // set the allowed units for data grouping
                     groupingUnits = [[
@@ -88,88 +88,88 @@
                     i = 0;
 
                 for (i; i < dataLength; i += 1) {
-                    TO_diff.push([
+                    chng_ltq.push([
                         data[i]['TS'],          // the date
-                        data[i]['chng_ltq'],     // TO_diff
+                        data[i]['chng_ltq'],     // chng_ltq
                     ]);
 
-                    ITM_CE_ltp.push([
+                    Spot.push([
                         data[i]['TS'],          // the date
-                        data[i]['Spot'],     // TO_diff
+                        data[i]['Spot'],     // chng_ltq
                     ]);
 
                 }
 
-                for (var i = 0; i < TO_diff.length; i++) {
+                for (var i = 0; i < chng_ltq.length; i++) {
                     if (i < (slider_value - 1)) {
-                        TO_diff_2.push([TO_diff[i][0], 0]);
+                        chng_ltq_2.push([chng_ltq[i][0], 0]);
                     }
                     else if (i >= (slider_value - 1)) {
                         sum = 0
                         len = (slider_value - 1) - 5
                         for (var j = i; j > (i - slider_value); j--) {
-                            // console.log("TO_diff[j][1] = ",TO_diff[j][1])
-                            sum = sum + TO_diff[j][1]
+                            // console.log("chng_ltq[j][1] = ",chng_ltq[j][1])
+                            sum = sum + chng_ltq[j][1]
                             // console.log(sum)
                         }
-                        TO_diff_2.push([TO_diff[i][0], sum]);
+                        chng_ltq_2.push([chng_ltq[i][0], sum]);
                     }
                     sum = 0
                 }
 
 
 
-                for (var i = 0; i < ITM_CE_ltp.length; i++) {
-                    for (var j = 0; j < ITM_CE_ltp[0].length; j++) {
+                for (var i = 0; i < Spot.length; i++) {
+                    for (var j = 0; j < Spot[0].length; j++) {
                         if (j == 0) {
-                            ITM_CE_ltp_helper.push(ITM_CE_ltp[i][j])
+                            Spot_helper.push(Spot[i][j])
                         }
                         else if (j == 1) {
                             if (i != 0 && i >= new_j) {
-                                if (ITM_CE_ltp[i][j] == 0) {
+                                if (Spot[i][j] == 0) {
                                     temp = i
                                     for (var a = (i - 1); a < i; a--) {
-                                        if (ITM_CE_ltp[a][j] != 0) {
+                                        if (Spot[a][j] != 0) {
                                             i = a
-                                            a = ITM_CE_ltp.length
+                                            a = Spot.length
                                         }
                                     }
-                                    ITM_CE_ltp_helper.push(ITM_CE_ltp[i][j])
+                                    Spot_helper.push(Spot[i][j])
                                     i = temp
                                 }
                                 else {
-                                    ITM_CE_ltp_helper.push(ITM_CE_ltp[i][j])
+                                    Spot_helper.push(Spot[i][j])
                                 }
                             }
                             else if (i == 0) {
-                                if (ITM_CE_ltp[i][j] == 0) {
+                                if (Spot[i][j] == 0) {
                                     temp_1 = i
-                                    for (var a = (i + 1); a < ITM_CE_ltp.length; a++) {
-                                        if (ITM_CE_ltp[a][j] != 0) {
+                                    for (var a = (i + 1); a < Spot.length; a++) {
+                                        if (Spot[a][j] != 0) {
                                             i = a
                                             new_j = i
                                             console.log("1st NON ZERO POSITION : ", i)
-                                            a = ITM_CE_ltp.length
+                                            a = Spot.length
                                         }
                                     }
-                                    ITM_CE_ltp_helper.push(ITM_CE_ltp[i][j])
+                                    Spot_helper.push(Spot[i][j])
                                     i = temp_1
                                 }
                                 else {
-                                    ITM_CE_ltp_helper.push(ITM_CE_ltp[i][j])
+                                    Spot_helper.push(Spot[i][j])
                                 }
                             }
                             else if (i < new_j) {
-                                ITM_CE_ltp_helper.push(ITM_CE_ltp[new_j][j])
+                                Spot_helper.push(Spot[new_j][j])
                             }
                         }
                     }
-                    ITM_CE_ltp_Final.push(ITM_CE_ltp_helper)
-                    ITM_CE_ltp_helper = []
+                    Spot_Final.push(Spot_helper)
+                    Spot_helper = []
                 }
 
-                for (var i = 0; i < ITM_CE_ltp_Final.length; i++) {
-                    if (ITM_CE_ltp_Final[i][1] == 0) {
+                for (var i = 0; i < Spot_Final.length; i++) {
+                    if (Spot_Final[i][1] == 0) {
                         console.log(i)
                     }
                 }
@@ -290,10 +290,10 @@
                         },
                         split: true,
                         formatter: function () {
-                            tooltipArray = ['<b>' + moment.unix(this.x).format('h:mm:ss a') + '</b>&nbsp;&nbsp;' + '<b>TO_diff:</b>&nbsp;' + this.points[0].y + '<b>&nbsp;&nbsp;TO_diff_2:</b>&nbsp;' + this.points[1].y
-                                // + '&nbsp;&nbsp;<b>ITM_CE_ltp:</b>&nbsp;' + this.points[2].y + '&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y
+                            tooltipArray = ['<b>' + moment.unix(this.x).format('h:mm:ss a') + '</b>&nbsp;&nbsp;' + '<b>chng_ltq:</b>&nbsp;' + this.points[0].y + '<b>&nbsp;&nbsp;chng_ltq_2:</b>&nbsp;' + this.points[1].y
+                                // + '&nbsp;&nbsp;<b>Spot:</b>&nbsp;' + this.points[2].y + '&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y
                             ]
-                            tooltip_1 = ['&nbsp;&nbsp;<b>ITM_CE_ltp:</b>&nbsp;' + this.points[2].y]
+                            tooltip_1 = ['&nbsp;&nbsp;<b>Spot:</b>&nbsp;' + this.points[2].y]
                             // tooltip_2 = ['&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y]
                             tooltip_3 = []
                             tooltip_4 = []
@@ -311,9 +311,9 @@
                     series: [
                         {
                             type: 'column',
-                            name: 'TO_diff',
+                            name: 'chng_ltq',
                             color: 'rgb(255, 108, 108)',
-                            data: TO_diff,
+                            data: chng_ltq,
                             yAxis: 1,
                             color: 'rgb(66, 177, 66)',
                             negativeColor: 'rgb(255, 108, 108)',
@@ -323,9 +323,9 @@
                         },
                         {
                             type: 'column',
-                            name: 'TO_diff_2',
+                            name: 'chng_ltq_2',
                             color: 'rgb(255, 108, 108)',
-                            data: TO_diff_2,
+                            data: chng_ltq_2,
                             yAxis: 2,
                             color: 'rgb(66, 177, 66)',
                             negativeColor: 'rgb(255, 108, 108)',
@@ -335,9 +335,9 @@
                         },
                         {
                             type: 'line',
-                            name: 'ITM_CE_ltp',
+                            name: 'Spot',
                             color: 'rgb(149, 177, 66)',
-                            data: ITM_CE_ltp_Final,
+                            data: Spot_Final,
                             dataGrouping: {
                                 enabled: false,
                             }
@@ -403,21 +403,21 @@
                 slider_value = parseFloat($(".tooltip-inner").text())
                 // console.log(slider_value)
 
-                TO_diff_2 = []
+                chng_ltq_2 = []
 
-                for (var i = 0; i < TO_diff.length; i++) {
+                for (var i = 0; i < chng_ltq.length; i++) {
                     if (i < (slider_value - 1)) {
-                        TO_diff_2.push([TO_diff[i][0], 0]);
+                        chng_ltq_2.push([chng_ltq[i][0], 0]);
                     }
                     else if (i >= (slider_value - 1)) {
                         sum = 0
                         len = (slider_value - 1) - 5
                         for (var j = i; j > (i - slider_value); j--) {
-                            // console.log("TO_diff[j][1] = ",TO_diff[j][1])
-                            sum = sum + TO_diff[j][1]
+                            // console.log("chng_ltq[j][1] = ",chng_ltq[j][1])
+                            sum = sum + chng_ltq[j][1]
                             // console.log(sum)
                         }
-                        TO_diff_2.push([TO_diff[i][0], sum]);
+                        chng_ltq_2.push([chng_ltq[i][0], sum]);
                     }
                     sum = 0
                 }
@@ -433,10 +433,10 @@
                         },
                         split: true,
                         formatter: function () {
-                            tooltipArray = ['<b>' + moment.unix(this.x).format('h:mm:ss a') + '</b>&nbsp;&nbsp;' + '<b>TO_diff:</b>&nbsp;' + this.points[0].y + '<b>&nbsp;&nbsp;TO_diff_2:</b>&nbsp;' + this.points[1].y
-                                // + '&nbsp;&nbsp;<b>ITM_CE_ltp:</b>&nbsp;' + this.points[2].y + '&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y
+                            tooltipArray = ['<b>' + moment.unix(this.x).format('h:mm:ss a') + '</b>&nbsp;&nbsp;' + '<b>chng_ltq:</b>&nbsp;' + this.points[0].y + '<b>&nbsp;&nbsp;chng_ltq_2:</b>&nbsp;' + this.points[1].y
+                                // + '&nbsp;&nbsp;<b>Spot:</b>&nbsp;' + this.points[2].y + '&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y
                             ]
-                            tooltip_1 = ['&nbsp;&nbsp;<b>ITM_CE_ltp:</b>&nbsp;' + this.points[2].y]
+                            tooltip_1 = ['&nbsp;&nbsp;<b>Spot:</b>&nbsp;' + this.points[2].y]
                             // tooltip_2 = ['&nbsp;&nbsp;<b>ITM_PE_ltp:</b>&nbsp;' + this.points[3].y]
                             tooltip_3 = []
                             tooltip_4 = []
@@ -446,9 +446,9 @@
                     series: [
                         {
                             type: 'column',
-                            name: 'TO_diff',
+                            name: 'chng_ltq',
                             color: 'rgb(255, 108, 108)',
-                            data: TO_diff,
+                            data: chng_ltq,
                             yAxis: 1,
                             color: 'rgb(66, 177, 66)',
                             negativeColor: 'rgb(255, 108, 108)',
@@ -458,9 +458,9 @@
                         },
                         {
                             type: 'column',
-                            name: 'TO_diff_2',
+                            name: 'chng_ltq_2',
                             color: 'rgb(255, 108, 108)',
-                            data: TO_diff_2,
+                            data: chng_ltq_2,
                             yAxis: 2,
                             color: 'rgb(66, 177, 66)',
                             negativeColor: 'rgb(255, 108, 108)',
@@ -470,9 +470,9 @@
                         },
                         {
                             type: 'line',
-                            name: 'ITM_CE_ltp',
+                            name: 'Spot',
                             color: 'rgb(149, 177, 66)',
-                            data: ITM_CE_ltp_Final,
+                            data: Spot_Final,
                             dataGrouping: {
                                 enabled: false,
                             }
